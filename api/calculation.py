@@ -7,9 +7,12 @@ from flask import jsonify
 
 
 def classification(request):
+    #音楽を取得するYouTubeのURL
     url = request.json["url"]
+    #音楽を保存するファイル名
     music_path = "ytmusic.mp3"
 
+    #YouTubeから音楽を抽出して保存
     ydl_opts = {
         "format": "bestaudio/best",
         "postprocessors": [
@@ -24,6 +27,7 @@ def classification(request):
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
+    #Lolipopのサーバーへ保存した音楽ファイルを転送
     url = "https://iut-b.main.jp/up2"
     files = {"file": open(music_path, "rb")}
     res = requests.post(url, files=files)
